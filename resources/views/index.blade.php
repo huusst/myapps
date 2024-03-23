@@ -52,6 +52,17 @@
                 font-weight: bold;
                 width: 100%;
             }
+            .operator{
+                height: 1px;
+                color: grey;
+                background-color: transparent; 
+                border-radius:10px;
+                outline:none;
+                text-align: right;
+                border: none;
+                font-weight: bold;
+                width: 100%;
+            }
             a{
                 text-decoration: none;
                 color: grey;
@@ -87,6 +98,7 @@
                             <div class="d-flex justify-content-end align-items-end border border-secondary" style="min-height:120px; box-sizing: border-box; border-radius:10px; padding-right:1rem; padding-bottom:1rem; padding-left:1rem;">
                            
 
+                                <input id="operator" type="text" name="operator" class="operator" autofocus readonly/> 
                                 <input id="result" type="text" name="result" class="result" autofocus readonly/> 
                             </div>
 
@@ -94,7 +106,7 @@
                                 <div class="d-flex flex-column py-3">
                                     <div class="d-flex flex-row">
                                         <input class="button bg-secondary" type="button" onclick="clearScreen()" value="AC"/>
-                                        <input class="button bg-secondary" type="button" onclick="display('%')" value="%"/>
+                                        <input class="button bg-secondary" type="button" onclick="appendOperator('%')" value="%"/>
                                         <button class="button bg-secondary" type="button" onclick="hapus()"><i class="fa-solid fa-delete-left"></i></button>
                                         <button class="button bg-secondary" type="button" onclick="appendOperator('/')"><i class="fa-solid fa-divide"></i></button>
                                     </div>
@@ -164,6 +176,7 @@ var tambahTitik = false;
 function clearScreen() {
     tambahOperator = false;
     document.getElementById("result").value = "";
+    document.getElementById("operator").value = "";
 }
 
 function display(value) {
@@ -190,9 +203,37 @@ function appendOperator(operator) {
         if (lastChar !== operator) {
                 expression = expression.slice(0, -1) + operator;
                 document.getElementById("result").value = expression;
+                document.getElementById("operator").value += "";
+                if (operator == "+") {
+                    document.getElementById("operator").value += "tambah";
+                } else if (operator == "-") {
+                    document.getElementById("operator").value += "kurang";
+                } else if (operator == "x") {
+                    document.getElementById("operator").value += "kali";
+                } else if (operator == "/") {
+                    document.getElementById("operator").value += "bagi";
+                } else if (operator == "%") {
+                    document.getElementById("operator").value += "modulus";
+                } else {
+                    document.getElementById("operator").value += "kesalahan";
+                }
             }
         }else{
             document.getElementById("result").value += operator;
+
+            if (operator == "+") {
+                document.getElementById("operator").value += "tambah";
+            } else if (operator == "-") {
+                document.getElementById("operator").value += "kurang";
+            } else if (operator == "x") {
+                document.getElementById("operator").value += "kali";
+            } else if (operator == "/") {
+                document.getElementById("operator").value += "bagi";
+            } else if (operator == "%") {
+                document.getElementById("operator").value += "modulus";
+            } else {
+                document.getElementById("operator").value += "kesalahan";
+            }
         }
 }   
 
@@ -202,14 +243,16 @@ function hapus() {
    if (
         resultValue.value.includes('+') || 
         resultValue.value.includes('-') || 
-        resultValue.value.includes('*') || 
+        resultValue.value.includes('x') || 
         resultValue.value.includes('/')
     ) {
         tambahOperator = true;
     }else{
         tambahOperator = false;
+        document.getElementById("operator").value = "";
     }
 }
+
 function hitung() {
     var expression = document.getElementById("result").value;
     var result = eval(expression);
